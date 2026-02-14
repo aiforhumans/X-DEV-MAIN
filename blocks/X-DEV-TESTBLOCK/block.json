@@ -3,11 +3,29 @@
   "id": "X-DEV-TESTBLOCK",
   "version": "1.0.0",
   "type": "backend",
-  "description": "Template backend block",
-  "runCommand": "node -e \"console.log('backend block running on port ' + process.env.PORT); setInterval(() => {}, 1000);\"",
+  "description": "LM Studio v1 API proxy block",
+  "runCommand": "node server.js",
   "env": {
     "PORT": {
       "required": true
+    },
+    "LM_STUDIO_BASE_URL": {
+      "description": "LM Studio server base URL",
+      "required": false,
+      "default": "http://127.0.0.1:1234"
+    },
+    "LM_STUDIO_API_TOKEN": {
+      "description": "Optional LM Studio API token",
+      "required": false
+    },
+    "LM_STUDIO_MODEL": {
+      "description": "Fallback model for /api/v1/chat when request omits model",
+      "required": false
+    },
+    "REQUEST_TIMEOUT_MS": {
+      "description": "Upstream request timeout in milliseconds",
+      "required": false,
+      "default": 120000
     }
   },
   "expose": {

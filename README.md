@@ -77,6 +77,18 @@ npm start -- run local-chat
 
 You should see output indicating that both the **backend** (Port 4000) and **frontend** (Port 3000) have started.
 
+### Running LM Studio Through `X-DEV-TESTBLOCK`
+
+Before running this recipe, make sure LM Studio is running locally and at least one model is loaded.
+
+```bash
+npm start -- run lmstudio-testblock
+```
+
+This starts:
+- `X-DEV-TESTBLOCK` on port `4100` (proxy to LM Studio v1 API)
+- `x-dev-ui` on port `3000` with `API_URL=http://localhost:4100`
+
 ---
 
 ## 🛠️ CLI Reference
@@ -87,6 +99,7 @@ The framework exposes a CLI tool `x-dev`.
 Starts the application defined in `recipes/<recipe>.json`.
 ```bash
 npm start -- run local-chat
+npm start -- run lmstudio-testblock
 ```
 
 ### `create <blockId>`
@@ -159,6 +172,16 @@ To compose an application:
   }
 }
 ```
+
+### `X-DEV-TESTBLOCK` Environment Variables
+
+`blocks/X-DEV-TESTBLOCK/block.json` supports:
+
+- `PORT` (required): Port for the proxy block.
+- `LM_STUDIO_BASE_URL` (optional, default `http://127.0.0.1:1234`): LM Studio base URL.
+- `LM_STUDIO_API_TOKEN` (optional): Token used when incoming requests do not provide `Authorization`.
+- `LM_STUDIO_MODEL` (optional): Fallback model for `POST /api/v1/chat` when `model` is omitted.
+- `REQUEST_TIMEOUT_MS` (optional, default `120000`): Upstream timeout in milliseconds.
 
 ---
 

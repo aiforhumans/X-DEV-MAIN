@@ -1,0 +1,19 @@
+{
+  "name": "LM Studio Test Block",
+  "blocks": {
+    "backend": {
+      "blockId": "X-DEV-TESTBLOCK",
+      "port": 4100,
+      "env": {
+        "LM_STUDIO_BASE_URL": "http://127.0.0.1:1234"
+      }
+    },
+    "frontend": {
+      "blockId": "x-dev-ui",
+      "port": 3000,
+      "env": {
+        "API_URL": "http://localhost:4100"
+      }
+    }
+  }
+}
