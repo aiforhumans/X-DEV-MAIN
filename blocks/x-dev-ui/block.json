@@ -3,7 +3,7 @@
   "id": "x-dev-ui",
   "version": "1.0.0",
   "type": "frontend",
-  "runCommand": "echo 'Mock UI Running on port $PORT'",
+  "runCommand": "node -e \"console.log('UI running on port ' + process.env.PORT + ' connecting to ' + process.env.API_URL); setInterval(() => {}, 1000);\"",
   "env": {
     "API_URL": { "description": "The backend endpoint", "required": true }
   },
