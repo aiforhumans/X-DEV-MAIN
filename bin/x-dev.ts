@@ -65,4 +65,74 @@ program
     });
   });
 
+program
+  .command('create <blockId>')
+  .description('Create a new Dev-Block template')
+  .option('-t, --type <type>', 'Block type (frontend|backend|worker|database)', 'backend')
+  .option('-p, --port <port>', 'Default block port')
+  .action((blockId: string, options: { type?: string; port?: string }) => {
+    const supportedTypes = ['frontend', 'backend', 'worker', 'database'] as const;
+    const blockType = (options.type || 'backend').toLowerCase();
+
+    if (!supportedTypes.includes(blockType as (typeof supportedTypes)[number])) {
+      console.error(chalk.red(`[Error] Unsupported block type: ${blockType}`));
+      console.error(chalk.yellow(`Supported types: ${supportedTypes.join(', ')}`));
+      process.exit(1);
+    }
+
+    const defaultPort = blockType === 'frontend' ? 3000 : 4000;
+    const parsedPort = Number(options.port ?? defaultPort);
+    if (!Number.isFinite(parsedPort) || parsedPort <= 0) {
+      console.error(chalk.red(`[Error] Invalid port: ${options.port}`));
+      process.exit(1);
+    }
+
+    const blockDir = path.join(projectRoot, 'blocks', blockId);
+    const manifestPath = path.join(blockDir, 'block.json');
+
+    if (fs.existsSync(manifestPath)) {
+      console.error(chalk.red(`[Error] Block already exists: ${blockId}`));
+      process.exit(1);
+    }
+
+    fs.mkdirSync(blockDir, { recursive: true });
+
+    const runCommand =
+      blockType === 'frontend'
+        ? `node -e "console.log('Frontend block running on port ' + process.env.PORT + ' API=' + (process.env.API_URL || 'not-set')); setInterval(() => {}, 1000);"`
+        : `node -e "console.log('${blockType} block running on port ' + process.env.PORT); setInterval(() => {}, 1000);"`;
+
+    const env: Record<string, { description?: string; required?: boolean; default?: string | number | boolean }> = {
+      PORT: { required: true },
+    };
+
+    if (blockType === 'frontend') {
+      env.API_URL = {
+        description: 'The backend endpoint',
+        required: false,
+        default: 'http://localhost:4000',
+      };
+    }
+
+    const manifest = {
+      schemaVersion: '1.0',
+      id: blockId,
+      version: '1.0.0',
+      type: blockType,
+      description: `Template ${blockType} block`,
+      runCommand,
+      env,
+      expose: {
+        port: {
+          default: parsedPort,
+          protocol: 'http',
+        },
+      },
+    };
+
+    fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf-8');
+    console.log(chalk.green(`[Create] Block created: ${blockId}`));
+    console.log(chalk.cyan(`[Create] Manifest: ${manifestPath}`));
+  });
+
 program.parse(process.argv);

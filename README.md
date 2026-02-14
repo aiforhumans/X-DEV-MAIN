@@ -89,6 +89,12 @@ Starts the application defined in `recipes/<recipe>.json`.
 npm start -- run local-chat
 ```
 
+### `create <blockId>`
+Scaffolds a new Dev-Block template in `blocks/<blockId>/block.json`.
+```bash
+npm start -- create X-DEV-DEVBLOCKTEMPLATE
+```
+
 ### `ps`
 Lists all currently running blocks and their status.
 ```bash

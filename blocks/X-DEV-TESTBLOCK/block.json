@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "id": "X-DEV-TESTBLOCK",
+  "version": "1.0.0",
+  "type": "backend",
+  "description": "Template backend block",
+  "runCommand": "node -e \"console.log('backend block running on port ' + process.env.PORT); setInterval(() => {}, 1000);\"",
+  "env": {
+    "PORT": {
+      "required": true
+    }
+  },
+  "expose": {
+    "port": {
+      "default": 4000,
+      "protocol": "http"
+    }
+  }
+}
