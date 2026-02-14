@@ -1,0 +1,16 @@
+{
+  "name": "Local Chat Bot",
+  "blocks": {
+    "backend": {
+      "blockId": "x-dev-api",
+      "port": 4000
+    },
+    "frontend": {
+      "blockId": "x-dev-ui",
+      "port": 3000,
+      "env": {
+        "API_URL": "http://localhost:4000"
+      }
+    }
+  }
+}
